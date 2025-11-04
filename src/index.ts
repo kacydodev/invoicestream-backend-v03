@@ -14,10 +14,10 @@ app.use(bodyParser.json());
 const config = {
   authRequired: false,
   auth0Logout: true,
-  secret: process.env.SECRET,
-  baseURL: 'http://localhost:8080',
-  clientID: 'PA13PFmCGixsgN2WQebw0axgNVhNM74r',
-  issuerBaseURL: 'https://dev-6wr7k8trv0617ymm.us.auth0.com',
+  secret: process.env.AUTH_SECRET,
+  baseURL: `http://localhost:${port}`,
+  clientID: 'MeC3vgBs3x7XPAVGbeDJkD4buYhEpGRs',
+  issuerBaseURL: 'https://invoicestream.au.auth0.com',
 };
 app.use(auth(config));
 
