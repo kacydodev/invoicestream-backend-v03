@@ -8,6 +8,34 @@ export function getStatus(req: Request, res: Response) {
 }
 
 export async function getInvoices(req: Request, res: Response) {
-  const invoices = await prisma.invoice.findMany();
-  res.send(invoices);
+  try {
+    const invoices = await prisma.invoice.findMany({
+      include: {
+        client: true,
+        items: true,
+      },
+    });
+    res.send(invoices);
+  } catch (err) {
+    console.error('Error fetching invoices:', err);
+    res.status(500).send('Internal Server Error');
+  } finally {
+    await prisma.$disconnect();
+  }
+}
+
+export async function getClients(req: Request, res: Response) {
+  try {
+    const clients = await prisma.client.findMany({
+      include: {
+        invoices: true,
+      },
+    });
+    res.send(clients);
+  } catch (err) {
+    console.error('Error fetching clients:', err);
+    res.status(500).send('Internal Server Error');
+  } finally {
+    await prisma.$disconnect();
+  }
 }
