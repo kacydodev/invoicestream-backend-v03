@@ -8,7 +8,7 @@
     "db:validate": "prisma format && prisma validate",
     "db:seed": "prisma db seed",
     "db:reset": "prisma migrate reset",
-    "db:setup": "prisma generate && prisma migrate deploy && prisma db seed",
+    "db:setup": "prisma generate && prisma migrate deploy && prisma db seed && prisma db push",
     "build": "tsc",
     "start:prod": "node ./dist/index.js",
     "lint": "eslint .",
