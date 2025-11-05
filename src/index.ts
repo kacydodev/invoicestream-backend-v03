@@ -3,6 +3,7 @@ import express from 'express';
 import bodyParser from 'body-parser';
 import { authRouter } from './routes/auth';
 import { auth } from 'express-openid-connect';
+import { apiRouter } from './routes/api';
 
 dotenv.config();
 const port = process.env.PORT;
@@ -21,16 +22,14 @@ const config = {
 };
 app.use(auth(config));
 
-// req.isAuthenticated is provided from the auth router
-app.get('/', (req, res) => {
-  res.send(req.oidc.isAuthenticated() ? 'Logged in' : 'Logged out');
+app.use('/api', apiRouter);
+app.use('/api/auth', authRouter);
+
+// make sure to place this at the end of route handling block
+app.use((req, res) => {
+  res.status(404);
+  res.json({ message: 'Endpoint not found. Please check with API Document.' });
 });
-
-// app.get('/', (req: Request, res: Response) => {
-// 	res.send('Welcome to our secure Express.js API with TypeScript!');
-// });
-
-app.use('/api', authRouter);
 
 app.listen(port, () => {
   console.log(`Server running on http://localhost:${port}`);
