@@ -4,6 +4,7 @@ import bodyParser from 'body-parser';
 import { authRouter } from './routes/auth';
 import { auth } from 'express-openid-connect';
 import { apiRouter } from './routes/api';
+import { invoiceRouter } from './routes/invoice';
 
 dotenv.config();
 const port = process.env.PORT;
@@ -23,6 +24,7 @@ const config = {
 app.use(auth(config));
 
 app.use('/api', apiRouter);
+app.use('/api/invoice', invoiceRouter);
 app.use('/api/auth', authRouter);
 
 // make sure to place this at the end of route handling block
