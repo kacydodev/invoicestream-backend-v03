@@ -11,18 +11,33 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum Status {
+  draft
+  pending
+  paid
+}
+
 model Client {
-  id       String   @id @default(uuid())
+  id       String    @id @default(uuid())
   name     String
+  email    String
+  address  String
   invoices Invoice[]
 }
 
 model Invoice {
-  id          String @id @default(uuid())
+  id          String    @id @default(uuid())
   secondaryId String?
-  client      Client @relation(fields: [clientId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  description String
+  paymentTerm Int?
+  paymentDue  DateTime?
+  status      Status    @default(draft)
+  client      Client    @relation(fields: [clientId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   clientId    String
   items       Item[]
+  total       Float?
 }
 
 model Item {
@@ -30,6 +45,6 @@ model Item {
   title     String
   quantity  Int
   price     Float
-  invoiceId String 
+  invoiceId String
   invoice   Invoice @relation(fields: [invoiceId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 }

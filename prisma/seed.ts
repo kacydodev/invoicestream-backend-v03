@@ -1,127 +1,15 @@
 // import { PrismaClient } from '@prisma/client';
 import 'dotenv/config';
-import { PrismaClient } from '../generated/prisma/client';
+import { PrismaClient } from '../src/generated/prisma/client';
+import mockData from './mockData';
 
 const prisma = new PrismaClient();
 
-const mockData = [
-  {
-    name: 'Jensen Huang',
-    invoices: {
-      create: [
-        {
-          secondaryId: 'RT3080',
-          items: {
-            create: {
-              title: 'Brand Guidelines',
-              quantity: 1,
-              price: 1800.9,
-            },
-          },
-        },
-      ],
-    },
-  },
-  {
-    name: 'Alex Grim',
-    invoices: {
-      create: [
-        {
-          secondaryId: 'XM9141',
-          items: {
-            create: [
-              {
-                title: 'Banner Design',
-                quantity: 1,
-                price: 156.0,
-              },
-              {
-                title: 'Email Design',
-                quantity: 2,
-                price: 200.0,
-              },
-            ],
-          },
-        },
-        {
-          items: {
-            create: [
-              {
-                title: 'Web Design',
-                quantity: 1,
-                price: 6155.91,
-              },
-            ],
-          },
-        },
-      ],
-    },
-  },
-  {
-    name: 'John Morrison',
-    invoices: {
-      create: [
-        {
-          secondaryId: 'RG0314',
-          items: {
-            create: {
-              title: 'Website Redesign',
-              quantity: 1,
-              price: 14002.33,
-            },
-          },
-        },
-      ],
-    },
-  },
-  {
-    name: 'Alysa Werner',
-    invoices: {
-      create: [
-        {
-          secondaryId: 'RT2080',
-          items: {
-            create: {
-              title: 'Logo Sketches',
-              quantity: 1,
-              price: 102.04,
-            },
-          },
-        },
-      ],
-    },
-  },
-  {
-    name: 'Mellisa Clarke',
-    invoices: {
-      create: [
-        {
-          secondaryId: 'AA1449',
-          items: {
-            create: [
-              {
-                title: 'New Logo',
-                quantity: 1,
-                price: 1532.33,
-              },
-              {
-                title: 'Brand Guidelines',
-                quantity: 1,
-                price: 2500.0,
-              },
-            ],
-          },
-        },
-      ],
-    },
-  },
-];
-
-async function main() {
+async function seed() {
   // Clean existing data
-  await prisma.client.deleteMany();
-  await prisma.invoice.deleteMany();
-  await prisma.item.deleteMany();
+  // await prisma.client.deleteMany();
+  // await prisma.invoice.deleteMany();
+  // await prisma.item.deleteMany();
 
   // Check if we already have users
   const clientCount = await prisma.client.count();
@@ -133,36 +21,51 @@ async function main() {
     for (let i = 0; i < mockData.length; i++) {
       await prisma.client.create({
         data: mockData[i],
-        // Include posts and categories on returned output
-        include: {
-          invoices: {
-            include: {
-              items: true,
-            },
-          },
-        },
       });
     }
+  }
+}
 
-    // await prisma.client.create({
-    //   data: {
-    //     name: 'Jensen Huang',
-    //     invoices: {
-    //       create: [
-    //         {
-    //           secondaryId: 'RT3080',
-    //           items: {
-    //             create: {
-    //               title: 'Brand Guidelines',
-    //               quantity: 1,
-    //               price: 1800.9,
-    //             },
-    //           },
-    //         },
-    //       ],
-    //     },
-    //   },
-    // });
+async function calculateTotal() {
+  // get invoices that has items
+  const invoicesWithItem = await prisma.invoice.findMany({
+    include: {
+      items: true,
+    },
+  });
+
+  // calculate total from items
+  for (let i = 0; i < invoicesWithItem.length; i++) {
+    // create an array of total for each item
+    const itemTotals = invoicesWithItem[i].items.map(({ quantity, price }) => {
+      return quantity * price;
+    });
+
+    // get sum of item totals
+    const sum = itemTotals.reduce(
+      (accumulator, currentValue) => accumulator + currentValue,
+      0,
+    );
+
+    // update invoice total
+    await prisma.invoice.update({
+      where: {
+        id: invoicesWithItem[i].id,
+      },
+      data: {
+        total: sum,
+      },
+    });
+  }
+}
+
+async function main() {
+  try {
+    await seed();
+  } catch (err) {
+    throw console.error('Seeding failed: ', err);
+  } finally {
+    await calculateTotal();
   }
 }
 
