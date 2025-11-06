@@ -3,11 +3,8 @@ import { PrismaClient } from '../generated/prisma/client';
 import type { Status } from '../generated/prisma/client';
 
 type RequestParams = object;
-
 type ResponseBody = object;
-
 type RequestBody = object;
-
 interface RequestQuery {
   status: Status;
   id: string | number;
@@ -35,19 +32,10 @@ export async function getInvoices(
           contains: description,
         },
       },
-
-      // TODO: Remove on prod
-      select: {
-        secondaryId: true,
-        status: true,
-        description: true,
+      include: {
+        client: true,
+        items: true,
       },
-
-      // TODO: Uncomment on Prod
-      // include: {
-      //   client: true,
-      //   items: true,
-      // },
     });
     res.send(invoices);
   } catch (err) {
