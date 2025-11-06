@@ -40,9 +40,29 @@ export async function getInvoices(
           createdAt: 'desc',
         },
       ],
-      include: {
-        client: true,
-        items: true,
+      select: {
+        secondaryId: true,
+        createdAt: true,
+        updatedAt: true,
+        description: true,
+        paymentTerm: true,
+        paymentDue: true,
+        status: true,
+        total: true,
+        client: {
+          select: {
+            name: true,
+            email: true,
+            address: true,
+          },
+        },
+        items: {
+          select: {
+            title: true,
+            quantity: true,
+            price: true,
+          },
+        },
       },
     });
     res.send(invoices);
