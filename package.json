@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start:dev": "nodemon -w *.ts -e ts -x ts-node --files -H -T ./src/index.ts",
+    "start:dev": "nodemon",
     "db:validate": "prisma format && prisma validate",
     "db:seed": "prisma db seed",
     "db:reset": "prisma migrate reset",
