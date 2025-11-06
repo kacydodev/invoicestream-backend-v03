@@ -32,6 +32,14 @@ export async function getInvoices(
           contains: description,
         },
       },
+      orderBy: [
+        {
+          updatedAt: 'desc',
+        },
+        {
+          createdAt: 'desc',
+        },
+      ],
       include: {
         client: true,
         items: true,
