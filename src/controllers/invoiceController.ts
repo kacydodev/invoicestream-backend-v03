@@ -7,7 +7,7 @@ type ResponseBody = object;
 type RequestBody = object;
 interface RequestQuery {
   status: Status;
-  id: string | number;
+  id: string;
   description: string;
 }
 
@@ -26,7 +26,7 @@ export async function getInvoices(
           equals: status,
         },
         secondaryId: {
-          contains: id.toString(),
+          contains: id,
         },
         description: {
           contains: description,
