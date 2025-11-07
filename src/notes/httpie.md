@@ -35,6 +35,7 @@ Filter by client's name
 
 ```bash
 http localhost:8080/api/invoice name==alex%20grim
-http localhost:8080/api/invoice name==alexgrim
 http localhost:8080/api/invoice name==alex+grim
+http localhost:8080/api/invoice name=="alex grim"
+http localhost:8080/api/invoice name=='alex grim'
 ```

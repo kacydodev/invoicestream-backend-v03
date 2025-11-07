@@ -33,11 +33,17 @@ export async function getInvoices(
           contains: id,
         },
         description: {
-          contains: description.replace(regexURLSpace, ' '),
+          contains:
+            description && description.match(regexURLSpace)
+              ? description.replace(regexURLSpace, ' ')
+              : description,
         },
         client: {
           name: {
-            contains: name.replace(regexURLSpace, ' '),
+            contains:
+              name && name.match(regexURLSpace)
+                ? name.replace(regexURLSpace, ' ')
+                : name,
           },
           email: {
             contains: email,
