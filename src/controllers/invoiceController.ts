@@ -94,7 +94,6 @@ export async function getInvoices(
 export async function updateInvoice(
   req: Request<RequestParams, ResponseBody, RequestBody, RequestQuery>,
   res: Response,
-  next: NextFunction,
 ) {
   try {
     const { id, paymentTerm, paymentDue, status, total } = req.query;
