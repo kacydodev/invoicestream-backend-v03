@@ -9,6 +9,9 @@ interface RequestQuery {
   status: Status;
   id: string;
   description: string;
+  name: string;
+  email: string;
+  address: string;
 }
 
 export const prisma = new PrismaClient();
@@ -18,7 +21,8 @@ export async function getInvoices(
   res: Response,
 ) {
   try {
-    const { status, id, description } = req.query;
+    const { status, id, description, name, email, address } = req.query;
+    const regexURLSpace = /\+|%20/gm;
 
     const invoices = await prisma.invoice.findMany({
       where: {
@@ -29,12 +33,57 @@ export async function getInvoices(
           contains: id,
         },
         description: {
-          contains: description,
+          contains:
+            description && description.match(regexURLSpace)
+              ? description.replace(regexURLSpace, ' ')
+              : description,
+        },
+        client: {
+          name: {
+            contains:
+              name && name.match(regexURLSpace)
+                ? name.replace(regexURLSpace, ' ')
+                : name,
+          },
+          email: {
+            contains: email,
+          },
+          address: {
+            contains: address,
+          },
         },
       },
-      include: {
-        client: true,
-        items: true,
+      orderBy: [
+        {
+          updatedAt: 'desc',
+        },
+        {
+          createdAt: 'desc',
+        },
+      ],
+      select: {
+        secondaryId: true,
+        createdAt: true,
+        updatedAt: true,
+        description: true,
+        paymentTerm: true,
+        paymentDue: true,
+        status: true,
+        total: true,
+        client: {
+          select: {
+            name: true,
+            email: true,
+            address: true,
+          },
+        },
+        items: {
+          select: {
+            title: true,
+            quantity: true,
+            price: true,
+          },
+        },
       },
     });
     res.send(invoices);
