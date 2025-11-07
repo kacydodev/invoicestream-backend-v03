@@ -1,4 +1,4 @@
-import { Request, Response } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import {
   PrismaClient,
   type Invoice,
@@ -94,6 +94,7 @@ export async function getInvoices(
 export async function updateInvoice(
   req: Request<RequestParams, ResponseBody, RequestBody, RequestQuery>,
   res: Response,
+  next: NextFunction,
 ) {
   try {
     const { id, paymentTerm, paymentDue, status, total } = req.query;
@@ -115,8 +116,9 @@ export async function updateInvoice(
 
     res.json(updatedInvoice);
   } catch (err) {
-    console.error('Error updating invoices:', err);
-    res.status(500).send('Internal Server Error');
+    console.error(err);
+    // next(err);
+    throw err;
   } finally {
     await prisma.$disconnect();
   }
