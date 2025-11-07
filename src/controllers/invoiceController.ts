@@ -1,20 +1,16 @@
 import { Request, Response } from 'express';
-import { PrismaClient } from '../generated/prisma/client';
-import type { Status } from '../generated/prisma/client';
+import {
+  PrismaClient,
+  type Invoice,
+  type Client,
+} from '../generated/prisma/client';
 
 type RequestParams = object;
 type ResponseBody = object;
 type RequestBody = object;
-interface RequestQuery {
-  status: Status;
-  id: string;
-  description: string;
-  name: string;
-  email: string;
-  address: string;
-}
+type RequestQuery = Invoice & Client;
 
-export const prisma = new PrismaClient();
+const prisma = new PrismaClient();
 
 export async function getInvoices(
   req: Request<RequestParams, ResponseBody, RequestBody, RequestQuery>,
@@ -89,6 +85,37 @@ export async function getInvoices(
     res.send(invoices);
   } catch (err) {
     console.error('Error fetching invoices:', err);
+    res.status(500).send('Internal Server Error');
+  } finally {
+    await prisma.$disconnect();
+  }
+}
+
+export async function updateInvoice(
+  req: Request<RequestParams, ResponseBody, RequestBody, RequestQuery>,
+  res: Response,
+) {
+  try {
+    const { id, paymentTerm, paymentDue, status, total } = req.query;
+    const updatedInvoice = await prisma.invoice.update({
+      where: {
+        id: id,
+      },
+      data: {
+        description: 'Logo Concept',
+        paymentTerm: paymentTerm,
+        paymentDue: paymentDue,
+        status: status,
+        total: total,
+
+        // DO NOT MODIFY
+        updatedAt: new Date(),
+      },
+    });
+
+    res.json(updatedInvoice);
+  } catch (err) {
+    console.error('Error updating invoices:', err);
     res.status(500).send('Internal Server Error');
   } finally {
     await prisma.$disconnect();

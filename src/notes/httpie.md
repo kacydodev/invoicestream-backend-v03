@@ -5,7 +5,7 @@
 - [Installation instructions →](https://httpie.io/docs#installation)
 - [Full documentation →](https://httpie.io/docs)
 
-## Commands
+## GET Commands
 
 Get all invoices
 
@@ -22,7 +22,7 @@ http localhost:8080/api/invoice status==pending
 Filter description, status
 
 ```bash
-http localhost:8080/api/invoice description==design
+http localhost:8080/api/invoice description==design status==pending
 ```
 
 Filter by ID
@@ -38,4 +38,25 @@ http localhost:8080/api/invoice name==alex%20grim
 http localhost:8080/api/invoice name==alex+grim
 http localhost:8080/api/invoice name=="alex grim"
 http localhost:8080/api/invoice name=='alex grim'
+```
+
+## Update Commands
+
+Update payment due date of invoice with ID `0e7cee1e-e78d-44d2-87da-24a45b985f81`
+
+```bash
+http PUT localhost:8080/api/invoice/update id==0e7cee1e-e78d-44d2-87da-24a45b985f81 paymentDue==2025-12-27T00:00:00Z
+```
+
+Update status of invoice with ID `0e7cee1e-e78d-44d2-87da-24a45b985f81`
+TODO: enum guard rail for internal server when invalid status is passed
+
+```bash
+http PUT localhost:8080/api/invoice/update id==0e7cee1e-e78d-44d2-87da-24a45b985f81 status=='something else'
+```
+
+Httpie XML file update - NOT WORKING
+
+```bash
+http -f PUT localhost:8080/api/invoice/update id==0e7cee1e-e78d-44d2-87da-24a45b985f81 @'./files/invoice.xml'
 ```
