@@ -19,14 +19,20 @@ Filter invoices by status
 http localhost:8080/api/invoice status==pending
 ```
 
-Search description, status
+Filter description, status
 
 ```bash
 http localhost:8080/api/invoice description==design
 ```
 
-Search by ID
+Filter by ID
 
 ```bash
 http localhost:8080/api/invoice id==9
+```
+
+Filter by client's name
+
+```bash
+http localhost:8080/api/invoice name==alex%20grim
 ```

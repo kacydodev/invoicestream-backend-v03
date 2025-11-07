@@ -9,6 +9,9 @@ interface RequestQuery {
   status: Status;
   id: string;
   description: string;
+  name: string;
+  email: string;
+  address: string;
 }
 
 export const prisma = new PrismaClient();
@@ -18,7 +21,7 @@ export async function getInvoices(
   res: Response,
 ) {
   try {
-    const { status, id, description } = req.query;
+    const { status, id, description, name, email, address } = req.query;
 
     const invoices = await prisma.invoice.findMany({
       where: {
@@ -30,6 +33,17 @@ export async function getInvoices(
         },
         description: {
           contains: description,
+        },
+        client: {
+          name: {
+            contains: name,
+          },
+          email: {
+            contains: email,
+          },
+          address: {
+            contains: address,
+          },
         },
       },
       orderBy: [
