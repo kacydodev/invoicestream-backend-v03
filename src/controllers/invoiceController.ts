@@ -22,6 +22,7 @@ export async function getInvoices(
 ) {
   try {
     const { status, id, description, name, email, address } = req.query;
+    const regexURLSpace = /\+|%20/gm;
 
     const invoices = await prisma.invoice.findMany({
       where: {
@@ -32,11 +33,11 @@ export async function getInvoices(
           contains: id,
         },
         description: {
-          contains: description,
+          contains: description.replace(regexURLSpace, ' '),
         },
         client: {
           name: {
-            contains: name,
+            contains: name.replace(regexURLSpace, ' '),
           },
           email: {
             contains: email,
