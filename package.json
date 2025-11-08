@@ -10,7 +10,7 @@
     "db:reset": "prisma migrate reset",
     "db:setup": "prisma generate && prisma migrate deploy && prisma db push && prisma db seed",
     "build": "tsc",
-    "start:prod": "node ./dist/index.js",
+    "start:prod": "nodemon ./dist/index.js",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "prettier": "prettier --ignore-path .gitignore --write \"./src/**/*.+(js|ts|json)\"",
