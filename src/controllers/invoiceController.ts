@@ -82,6 +82,7 @@ export async function getInvoices(
         },
       },
     });
+    console.log('array count:', invoices.length);
     res.send(invoices);
   } catch (err) {
     console.error('Error fetching invoices:', err);
@@ -113,7 +114,7 @@ export async function updateInvoice(
       },
     });
 
-    res.json(updatedInvoice);
+    res.send(updatedInvoice);
   } catch (err) {
     console.error(err);
     // next(err);
