@@ -9,13 +9,7 @@ const port = process.env.PORT;
 const app = express();
 app.use(bodyParser.json());
 
-app.use('/api', router);
-
-// make sure to place this at the end of route handling block
-app.use((req, res) => {
-  res.status(404);
-  res.json({ message: 'Endpoint not found. Please check with API Document.' });
-});
+app.use('/', router);
 
 app.listen(port, () => {
   console.log(`Server running on http://localhost:${port}`);
