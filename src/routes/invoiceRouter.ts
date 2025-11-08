@@ -1,6 +1,8 @@
-import e from 'express';
+import { Router } from 'express';
 import { getInvoices, updateInvoice } from '../controllers/invoiceController';
 
-export const invoiceRouter = e.Router();
+const invoiceRouter = Router();
 invoiceRouter.get('/', getInvoices);
 invoiceRouter.put('/update', updateInvoice);
+
+export default invoiceRouter;
