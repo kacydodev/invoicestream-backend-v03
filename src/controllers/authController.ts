@@ -1,39 +1,50 @@
 import { Request, Response } from 'express';
-import bcrypt from 'bcrypt';
+// import bcrypt from 'bcrypt';
+import { PrismaClient, User } from '../generated/prisma/client';
 
-interface User {
-  username: string;
-  password: string;
+const prisma = new PrismaClient();
+
+// async function findUserWithEmail(email: string) {
+//   try {
+//     const user = await prisma.user.findUnique({
+//       where: {
+//         email: email,
+//       },
+//     });
+//     return user;
+//   } catch (err) {
+//     console.error('Error fetching invoices:', err);
+//   } finally {
+//     await prisma.$disconnect();
+//   }
+// }
+
+export async function signup(req: Request, res: Response) {
+  const { email, password }: User = req.body;
+
+  try {
+    const user = await prisma.user.findUnique({
+      where: {
+        email: email,
+      },
+    });
+
+    if (user) {
+      return res.send(`user already exist`);
+    } else {
+      const newUser = await prisma.user.create({
+        data: {
+          email: email,
+          password: password,
+        },
+      });
+      return res.send(newUser);
+    }
+  } catch (err) {
+    console.error('Error creating user:', err);
+  } finally {
+    await prisma.$disconnect();
+  }
 }
 
-const users: User[] = [
-  {
-    username: 'testuser',
-    password: '9999',
-  },
-];
-
-export const signup = async (req: Request, res: Response) => {
-  const { username, password } = req.body;
-
-  if (users.find((user) => user.username === username)) {
-    return res.status(400).json({ message: 'Username already exists' });
-  }
-
-  const hashedPassword = await bcrypt.hash(password, 10);
-  users.push({ username, password: hashedPassword });
-
-  res.status(201).json({ message: 'User registered successfully' });
-};
-
-export const login = async (req: Request, res: Response) => {
-  const { username, password } = req.body;
-
-  const user = users.find((user) => user.username === username);
-
-  if (user && (await bcrypt.compare(password, user.password))) {
-    res.json({ message: 'Login successful' });
-  } else {
-    res.status(401).json({ message: 'Invalid credentials' });
-  }
-};
+// export const login = async (req: Request, res: Response) => {};
