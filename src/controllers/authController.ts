@@ -20,7 +20,8 @@ const prisma = new PrismaClient();
 // }
 
 export async function signup(req: Request, res: Response) {
-  const { email, password }: User = req.body;
+  const { email, password, name }: User = req.body;
+  const regexURLSpace = /\+|%20/gm;
 
   try {
     const user = await prisma.user.findUnique({
@@ -36,6 +37,9 @@ export async function signup(req: Request, res: Response) {
         data: {
           email: email,
           password: password,
+          name: name.match(regexURLSpace)
+            ? name.replace(regexURLSpace, ' ')
+            : name,
         },
       });
       return res.send(newUser);
