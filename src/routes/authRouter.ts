@@ -1,10 +1,13 @@
 import { Router } from 'express';
-import { signup } from '../controllers/authController';
+import { getDashboard, login, signup } from '../controllers/authController';
+import { checkAuthenticated } from '../utils/middlewares';
 
-const authRouter = Router();
-// authRouter.post('/login');
+export const authRouter = Router();
+authRouter.post('/', checkAuthenticated);
+authRouter.post('/login', login);
 // authRouter.get('/logout');
-// authRouter.delete('/delete');
+authRouter.get('/user/:id', getDashboard);
+// authRouter.post('/user:id/delete');
 authRouter.post('/signup', signup);
 
 export default authRouter;

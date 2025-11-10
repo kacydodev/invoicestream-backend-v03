@@ -67,7 +67,34 @@ Signup
 
 ```bash
 http POST :8080/auth/signup \
-  email=testuser@example.com \
+  email=foo@test.com \
   password=password1234 \
-  name='Test User'
+  name='Test User Foo'
+```
+
+```bash
+http POST :8080/auth/signup \
+  email=bar@test.com \
+  password=password1234 \
+  name='Test User Bar'
+```
+
+Login
+
+```bash
+http POST :8080/auth/login \
+  email=foo@test.com \
+  password=password1234 \
+```
+
+```bash
+http POST :8080/auth/login \
+  email=bar@test.com \
+  password=password1234 \
+```
+
+Dashboard
+
+```bash
+http :8080/auth/user/1234
 ```
