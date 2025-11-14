@@ -40,6 +40,12 @@ http localhost:8080/api/invoice name=="alex grim"
 http localhost:8080/api/invoice name=='alex grim'
 ```
 
+Get status by name
+
+```bash
+http :8080/api/invoice/status/:draft
+```
+
 ## Update Commands
 
 Update payment due date of invoice with ID `0e7cee1e-e78d-44d2-87da-24a45b985f81`
