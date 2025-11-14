@@ -25,7 +25,7 @@ Filter description, status
 http localhost:8080/api/invoice description==design status==pending
 ```
 
-Filter by ID
+Filter by secondary ID
 
 ```bash
 http localhost:8080/api/invoice id==9
@@ -40,10 +40,16 @@ http localhost:8080/api/invoice name=="alex grim"
 http localhost:8080/api/invoice name=='alex grim'
 ```
 
+Get invoice by id `0e7cee1e-e78d-44d2-87da-24a45b985f81`
+
+```bash
+http :8080/api/invoice/0e7cee1e-e78d-44d2-87da-24a45b985f81
+```
+
 Get status by name
 
 ```bash
-http :8080/api/invoice/status/:draft
+http :8080/api/invoice/status/draft
 ```
 
 ## Update Commands
