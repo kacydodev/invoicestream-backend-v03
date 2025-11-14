@@ -6,7 +6,7 @@ import {
   Status,
 } from '../generated/prisma/client';
 
-type RequestParams = object;
+type RequestParams = Invoice;
 type ResponseBody = object;
 type RequestBody = object;
 type RequestQuery = Invoice & Client;
@@ -93,6 +93,50 @@ export async function getInvoices(
   }
 }
 
+export async function getInvoice(
+  req: Request<RequestParams, ResponseBody, RequestBody, RequestQuery>,
+  res: Response,
+) {
+  try {
+    const { id } = req.params;
+    const invoice = await prisma.invoice.findFirst({
+      where: {
+        id: id,
+      },
+      select: {
+        secondaryId: true,
+        createdAt: true,
+        updatedAt: true,
+        description: true,
+        paymentTerm: true,
+        paymentDue: true,
+        status: true,
+        total: true,
+        client: {
+          select: {
+            name: true,
+            email: true,
+            address: true,
+          },
+        },
+        items: {
+          select: {
+            title: true,
+            quantity: true,
+            price: true,
+          },
+        },
+      },
+    });
+    return res.send(invoice);
+  } catch (err) {
+    console.error(err);
+    throw err;
+  } finally {
+    await prisma.$disconnect();
+  }
+}
+
 export async function getStatus(req: Request, res: Response) {
   res.send(Status);
 }
@@ -122,7 +166,6 @@ export async function updateInvoice(
     res.send(updatedInvoice);
   } catch (err) {
     console.error(err);
-    // next(err);
     throw err;
   } finally {
     await prisma.$disconnect();
