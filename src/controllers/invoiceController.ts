@@ -1,4 +1,4 @@
-import { NextFunction, Request, Response } from 'express';
+import { Request, Response } from 'express';
 import {
   PrismaClient,
   type Invoice,
@@ -175,18 +175,15 @@ export async function updateInvoice(
 export async function deleteInvoice(
   req: Request<RequestParams, ResponseBody, RequestBody, RequestQuery>,
   res: Response,
-  next: NextFunction,
 ) {
   try {
     const { id } = req.params;
-    console.log('id:', id);
     await prisma.invoice.delete({ where: { id: id } });
-    return res.send(`Invoice ${id} deleted`);
+    res.send(`Invoice ${id} deleted`);
   } catch (err) {
     console.error(err);
     throw err;
   } finally {
     await prisma.$disconnect();
-    next();
   }
 }
