@@ -28,7 +28,7 @@ http localhost:8080/api/invoice description==design status==pending
 Filter by secondary ID
 
 ```bash
-http localhost:8080/api/invoice id==9
+http localhost:8080/api/invoice id==04f969b8-f616-4408-8f65-17acdef66152
 ```
 
 Filter by client's name
@@ -44,6 +44,12 @@ Get invoice by id `0e7cee1e-e78d-44d2-87da-24a45b985f81`
 
 ```bash
 http :8080/api/invoice/0e7cee1e-e78d-44d2-87da-24a45b985f81
+```
+
+Delete invoice `04f969b8-f616-4408-8f65-17acdef66152`
+
+```bash
+http DELETE :8080/api/invoice/04f969b8-f616-4408-8f65-17acdef66152
 ```
 
 Get status by name
