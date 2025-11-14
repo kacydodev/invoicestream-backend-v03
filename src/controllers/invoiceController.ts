@@ -171,3 +171,19 @@ export async function updateInvoice(
     await prisma.$disconnect();
   }
 }
+
+export async function deleteInvoice(
+  req: Request<RequestParams, ResponseBody, RequestBody, RequestQuery>,
+  res: Response,
+) {
+  try {
+    const { id } = req.params;
+    await prisma.invoice.delete({ where: { id: id } });
+    res.send(`Invoice ${id} deleted`);
+  } catch (err) {
+    console.error(err);
+    throw err;
+  } finally {
+    await prisma.$disconnect();
+  }
+}
