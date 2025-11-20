@@ -3,7 +3,6 @@ import {
   PrismaClient,
   type Invoice,
   type Client,
-  Status,
 } from '../generated/prisma/client';
 
 type RequestParams = Invoice;
@@ -134,11 +133,6 @@ export async function getInvoice(
   } finally {
     await prisma.$disconnect();
   }
-}
-
-export async function getStatus(req: Request, res: Response) {
-  const statusList = Object.keys(Status);
-  res.send(statusList);
 }
 
 export async function updateInvoice(
