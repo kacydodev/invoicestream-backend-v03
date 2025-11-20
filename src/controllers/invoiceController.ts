@@ -60,31 +60,30 @@ export async function getInvoices(
       ],
       select: {
         secondaryId: true,
-        createdAt: true,
-        updatedAt: true,
+        // createdAt: true,
+        // updatedAt: true,
         description: true,
-        paymentTerm: true,
+        // paymentTerm: true,
         paymentDue: true,
         status: true,
         total: true,
         client: {
           select: {
             name: true,
-            email: true,
-            address: true,
+            // email: true,
+            // address: true,
           },
         },
-        items: {
-          select: {
-            title: true,
-            quantity: true,
-            price: true,
-          },
-        },
+        // items: {
+        //   select: {
+        //     title: true,
+        //     quantity: true,
+        //     price: true,
+        //   },
+        // },
       },
     });
-    console.log('array count:', invoices.length);
-    res.send(invoices);
+    res.send({ invoices: invoices, length: invoices.length });
   } catch (err) {
     console.error('Error fetching invoices:', err);
     res.status(500).send('Internal Server Error');
@@ -138,7 +137,8 @@ export async function getInvoice(
 }
 
 export async function getStatus(req: Request, res: Response) {
-  res.send(Status);
+  const statusList = Object.keys(Status);
+  res.send(statusList);
 }
 
 export async function updateInvoice(
