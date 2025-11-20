@@ -4,7 +4,7 @@ import invoiceRouter from './invoiceRouter';
 const router = Router();
 
 // Routes
-router.use('/api/invoice', invoiceRouter);
+router.use('/invoice', invoiceRouter);
 
 // make sure to place this at the end of route handling block
 const notFoundHandler = (req: Request, res: Response) => {

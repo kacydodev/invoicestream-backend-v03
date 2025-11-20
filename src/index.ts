@@ -13,7 +13,7 @@ app.use(morgan('dev'));
 app.use(cors());
 app.use(bodyParser.json());
 
-app.use('/', router);
+app.use('/api/v03', router);
 
 app.listen(port, () => {
   console.log(`Server running on http://localhost:${port}`);
